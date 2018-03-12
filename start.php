@@ -36,6 +36,9 @@ $webSocketServer->on('Request', function ($request, $respone) use ($webSocketSer
      } else if($request->server['request_uri'] == '/push'){
         $websocket = new Websocket($webSocketServer, $request); //建立连接
         $websocket->push($request->server['query_string']);
+     }else if ($request->server['request_uri'] == '/close') {
+      
+        $webSocketServer->close($fd);
      }
 });
 

@@ -91,7 +91,9 @@ class Websocket
      */
     public function out()
     {
-      return cache_flush();
+      
+
+      
     }
 
     /**
