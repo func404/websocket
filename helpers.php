@@ -86,16 +86,20 @@ if (! function_exists('cache_unset')) {
     function cache_unset($key)
     {
         $cache = Cache::getInstance(Config::REDIS_HOST, Config::REDIS_PORT, Config::REDIS_AUTH);
-        return $cache->del($key);
+        return $cache->del(Config::CACHE_PREFIX.$key);
     }
 }
 
-if (! function_exists(set_sid)) {
+if (! function_exists('set_sid')) {
 
     function set_sid($platform_id, $user_id, $timeout = 0)
     {
         $userId = 'uid_' . $platform_id . '_' . $user_id; // 保存用户ID
         $sessionId = 'sid_' . md5($userId . rand(0, 99999999999)); // 保存用户session ID
+    
+         if (cache_get($userId)) {
+           cache_unset(cache_get($userId)); 
+         }
         if (cache_set($userId, $sessionId, $timeout) && cache_set($sessionId, $userId, $timeout)) {
             return $sessionId;
         } else {
@@ -104,7 +108,7 @@ if (! function_exists(set_sid)) {
     }
 }
 
-if (! function_exists(get_uid)) {
+if (! function_exists('get_uid')) {
 
     function get_uid($session_id)
     {
@@ -113,7 +117,7 @@ if (! function_exists(get_uid)) {
             $arr = explode('_', $userId);
             return [
                 'platform_id' => $arr[1],
-                'user_id' => $arr['user_id']
+                'user_id' => $arr[2]
             ];
         } else {
             return false;
@@ -121,12 +125,15 @@ if (! function_exists(get_uid)) {
     }
 }
 
-if (! function_exists(set_fid)) {
+if (! function_exists('set_fid')) {
 
     function set_fid($session_id, $fd, $timeout)
     {
-        $fd = 'fd_' . $fd;
+        $fd = 'fd_' . $fd .'_'.$session_id;
         $fsession_id = 'f_' . $session_id;
+        if (cache_get($fsession_id)) {
+           cache_unset(cache_get($fsession_id)); 
+         }
         if (cache_set($fd, $fsession_id, $timeout) && cache_set($fsession_id, $fd, $timeout)) {
             return $fsession_id;
         } else {
@@ -135,7 +142,7 @@ if (! function_exists(set_fid)) {
     }
 }
 
-if (! function_exists(get_fid)) {
+if (! function_exists('get_fid')) {
 
     function get_fid($session_id)
     {
@@ -151,7 +158,7 @@ if (! function_exists(get_fid)) {
 
 if (! function_exists('json')) {
 
-    function json($message = '')
+    function json($message = '',$data='')
     {
         if ($message) {
             return json_encode([
@@ -161,7 +168,8 @@ if (! function_exists('json')) {
         } else {
             return json_encode([
                 'code' => 0,
-                'message' => 'success'
+                'message' => 'success',
+                'data' => $data
             ]);
         }
     }

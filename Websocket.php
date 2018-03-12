@@ -19,10 +19,10 @@ class Websocket
      * server
      * 注册获取session_id , 服务器发起
      */
-    public function regist()
-    {
-        $platform_id = $user_id = $token = 0;
-        
+    public function regist($platform_id=0,$user_id=0)
+    {   
+        $token=0;
+
         if (! $this->check()) {
             return json('Access deny!'); /* 禁止访问 */
         }
@@ -38,22 +38,21 @@ class Websocket
      * @param string $session_id            
      *
      */
-    public function login()
+    public function login($session_id=0,$fd)
     {
-        $session_id = 0;
-        
-        $fd = 0;
-        $session_id = 0;
+        // $session_id = 0;
+        // $fd = 0;
+        // $session_id = 0;
         $platFormUser = get_uid($session_id);
         if ($platFormUser) {
-            $platforms = Config::PLATFORM;
+            $platforms = Config::PLATFORMS;
             if (set_fid($session_id, $fd, $platforms[$platFormUser['platform_id']]['timeout'])) {
-                return 0;
+                return true;
             } else {
-                return 1;
+                return false;
             }
         } else {
-            return 'FAILED';
+            return false;
         }
     }
 
@@ -61,11 +60,15 @@ class Websocket
      * server
      * 发送push消息
      */
-    public function push()
+    public function push($data)
     {
         $platform_id = $user_id = $token = $message = 0;
-        
-        ;
+        $dataArr = [];
+        parse_str($data,$dataArr);
+        $fdstr = cache_get('f_'.$dataArr['session_id']);
+        $fdArr = explode('_',$fdstr);
+        $fd = $fdArr[1];
+        return $this->ws->push($fd,$dataArr['data']); 
     }
 
     /**
@@ -94,6 +97,6 @@ class Websocket
      */
     private function check($request = '')
     {
-        ;
+        return true;
     }
 }
