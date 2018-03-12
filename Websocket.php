@@ -66,18 +66,23 @@ class Websocket
         $dataArr = [];
         parse_str($data,$dataArr);
         $fdstr = cache_get('f_'.$dataArr['session_id']);
-        $fdArr = explode('_',$fdstr);
-        $fd = $fdArr[1];
-        return $this->ws->push($fd,$dataArr['data']); 
+        if ($fdstr) {
+              $fdArr = explode('_',$fdstr);
+            $fd = $fdArr[1];
+            return $this->ws->push($fd,$dataArr['data']); 
+        }else{
+            return false;
+        }
+     
     }
 
     /**
      * browser
-     * 客户端发起关闭
+     * 客户端发起关闭   清除缓存信息
      */
-    public function close()
+    public function close($fd)
     {
-        ;
+       get_sid($fd);
     }
 
     /**
@@ -86,10 +91,7 @@ class Websocket
      */
     public function out()
     {
-        $platform_id = $user_id = $token = 0;
-        
-        // 断开 close
-        // 清除缓存
+      return cache_flush();
     }
 
     /**

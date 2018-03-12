@@ -108,6 +108,23 @@ if (! function_exists('set_sid')) {
     }
 }
 
+if (! function_exists('get_sid')) {
+
+    function get_sid($fd)
+    {
+       $fdstr = cache_get('fd_'.$fd);
+       if (!$fdstr) {
+          return false;
+       }
+       $session_id = explode('f_',$fdstr)[1];
+       $uid = cache_get($session_id);
+       cache_unset('fd_'.$fd);  //删除客户端编号
+       cache_unset($uid);//删除uid
+       cache_unset($session_id);//删除session_id
+       cache_unset('f_'.$session_id);//删除
+    }
+}
+
 if (! function_exists('get_uid')) {
 
     function get_uid($session_id)
@@ -129,8 +146,8 @@ if (! function_exists('set_fid')) {
 
     function set_fid($session_id, $fd, $timeout)
     {
-        $fd = 'fd_' . $fd .'_'.$session_id;
-        $fsession_id = 'f_' . $session_id;
+        $fd = 'fd_' . $fd;
+        $fsession_id = 'f_'.$session_id;
         if (cache_get($fsession_id)) {
            cache_unset(cache_get($fsession_id)); 
          }

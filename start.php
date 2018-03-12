@@ -36,22 +36,20 @@ $webSocketServer->on('Request', function ($request, $respone) use ($webSocketSer
      } else if($request->server['request_uri'] == '/push'){
         $websocket = new Websocket($webSocketServer, $request); //建立连接
         $websocket->push($request->server['query_string']);
-
-    }
+     }
 });
 
 // 监听WebSocket消息事件
 $webSocketServer->on('message', function ($webSocketServer, $frame) {
-    echo "接收消息处";
-     var_dump($frame);//
+    //不处理接收的消息
 });
 
 // 监听WebSocket连接关闭事件
 $webSocketServer->on('close', function ($webSocketServer, $fd) {
-    // $websocket = new Websocket($webSocketServer);
-    // $websocket->close();
-    echo "关闭连接处";
+   echo "连接关闭时";
     var_dump($fd);
+    $websocket = new Websocket($webSocketServer);
+    $websocket->close($fd);
     $webSocketServer->close($fd);
 });
 
