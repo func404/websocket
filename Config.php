@@ -3,7 +3,7 @@
 final class Config
 {
 
-    const SOCKET_PORT = 8888;
+    const SOCKET_PORT = 8889;
 
     const WORKER_NUM = 4;
 
@@ -15,9 +15,9 @@ final class Config
 
     const REDIS_HOST = '127.0.0.1';
 
-    const REDIS_PORT = '6379';
+    const REDIS_PORT = '6380';
 
-    const REDIS_AUTH = ''; //'!@#qweASD2018'
+    const REDIS_AUTH = '!@#qweASD2018';
 
     const IP_ALLOWS = [
         '127.0.0.1'

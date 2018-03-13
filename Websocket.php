@@ -19,8 +19,11 @@ class Websocket
      * server
      * 注册获取session_id , 服务器发起
      */
-    public function regist($platform_id=0,$user_id=0)
+    public function regist($message)
     {   
+        $mesarr =  explode('/',$message);
+        $platform_id = $mesarr[0];
+        $user_id=$mesarr[1];
         $token=0;
 
         if (! $this->check()) {

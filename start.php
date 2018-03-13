@@ -22,16 +22,12 @@ $webSocketServer->on('open', function ($webSocketServer, $request) {
 // 监听HTTP请求
 $webSocketServer->on('Request', function ($request, $respone) use ($webSocketServer) {
      $websocket = '';
+     var_dump($request);
     if ($request->server['request_uri'] == '/favicon.ico') {
         $respone->end(null);
     } else if($request->server['request_uri'] == '/regist'){
         $websocket = new Websocket($webSocketServer, $request); //建立连接
-        if (isset($request->cookie['PHPSESSID'])) {
-            $userId = $request->cookie['PHPSESSID'];
-        }else{
-            $userId = 0;
-        }
-        $data = $websocket->regist($request->server['query_string'],$userId);
+        $data = $websocket->regist($request->server['query_string']);
         return $respone->end($data); //向浏览器发送内容
      } else if($request->server['request_uri'] == '/push'){
         $websocket = new Websocket($webSocketServer, $request); //建立连接
@@ -60,7 +56,7 @@ $webSocketServer->set([
     'backlog' => Config::BACKLOG
 ]);
 // Config::REDIS_PORT
-$redis = Cache::getInstance(Config::REDIS_HOST,6379,Config::REDIS_AUTH);
+$redis = Cache::getInstance(Config::REDIS_HOST,Config::REDIS_PORT,Config::REDIS_AUTH);
 foreach (Config::PLATFORMS as $key => $value) {
   $redis->hset('wlxs_websocket_platforms',$key,json_encode($value));
 }
