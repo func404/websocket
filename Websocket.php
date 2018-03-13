@@ -21,10 +21,10 @@ class Websocket
      */
     public function regist($message)
     {   
-        if (count($mesarr)<2) {
-           return false;  
-        }
         $mesarr =  explode('/',$message);
+        if (count($mesarr)<1) {
+           return false;
+        }
         $platform_id = $mesarr[0];
         $user_id=$mesarr[1];
         $token=0;
@@ -106,10 +106,11 @@ class Websocket
 
         $session_id = cache_get('uid_'.$platform_id.'_'.$user_id);
         if ($session_id) {
-            get_fid($session_id);
+           $fd = get_fid($session_id);
             get_sid($fd);
+         return $fd;
         }
-
+       return false;
     }
 
     /**

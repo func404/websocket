@@ -31,7 +31,9 @@ $webSocketServer->on('Request', function ($request, $respone) use ($webSocketSer
         $websocket = new Websocket($webSocketServer, $request); //建立连接
         $websocket->push($request->server['query_string']);
      }else if ($request->server['request_uri'] == '/close') {
-        $webSocketServer->close($request->server['query_string']);
+        $websocket = new Websocket($webSocketServer, $request);
+       $fd =  $websocket->out($request->server['query_string']);
+        $webSocketServer->close($fd);
      }
 });
 
@@ -52,7 +54,7 @@ $webSocketServer->on('close', function ($webSocketServer, $fd) {
 $webSocketServer->set([
     'worker_num' => Config::WORKER_NUM,
     'daemonize'=>false,
-    // 'daemonize' => Config::DAEMONIZE,
+    'daemonize' => Config::DAEMONIZE,
     'backlog' => Config::BACKLOG
 ]);
 // Config::REDIS_PORT
