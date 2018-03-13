@@ -10,9 +10,7 @@ $webSocketServer = new swoole_websocket_server("0.0.0.0", Config::SOCKET_PORT);
 $webSocketServer->on('open', function ($webSocketServer, $request) {
     $session_id =  $request->server['query_string'];
     $websocket = new Websocket($webSocketServer, $request);
-    echo "建立连接处："; var_dump($request->fd);
     $result = $websocket->login($session_id,$request->fd);
-    var_dump($result);
     if ($result) {
         return $webSocketServer->push($request->fd, json(0));
     } else {
@@ -33,7 +31,7 @@ $webSocketServer->on('Request', function ($request, $respone) use ($webSocketSer
         $websocket = new Websocket($webSocketServer, $request); //建立连接
         $websocket->push($request->server['query_string']);
      }else if ($request->server['request_uri'] == '/close') {
-        $webSocketServer->close($fd);
+        $webSocketServer->close($request->server['query_string']);
      }
 });
 

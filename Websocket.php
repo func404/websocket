@@ -21,6 +21,9 @@ class Websocket
      */
     public function regist($message)
     {   
+        if (count($mesarr)<2) {
+           return false;  
+        }
         $mesarr =  explode('/',$message);
         $platform_id = $mesarr[0];
         $user_id=$mesarr[1];
@@ -47,7 +50,6 @@ class Websocket
         // $fd = 0;
         // $session_id = 0;
         $platFormUser = get_uid($session_id);
-        var_dump($platFormUser);
         if ($platFormUser) {
             $platforms = Config::PLATFORMS;
             if (set_fid($session_id, $fd, $platforms[$platFormUser['platform_id']]['timeout'])) {
@@ -93,11 +95,21 @@ class Websocket
      * server
      * 服务器端断开
      */
-    public function out()
+    public function out($message)
     {
-      
+        $mesarr =  explode('/',$message);
+        if (count($mesarr)<2) {
+           return false;  
+        }
+        $platform_id = $mesarr[0];
+        $user_id=$mesarr[1];
 
-      
+        $session_id = cache_get('uid_'.$platform_id.'_'.$user_id);
+        if ($session_id) {
+            get_fid($session_id);
+            get_sid($fd);
+        }
+
     }
 
     /**
