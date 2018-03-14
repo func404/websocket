@@ -16,7 +16,7 @@ class Cache
     {
         $func = $persistent ? 'pconnect' : 'connect'; // 长链接
         self::$handler = new \Redis();
-        self::$handler->$func($host, $port, - 1);
+        self::$handler->$func($host, $port);
         
         if ('' != $auth) {
             self::$handler->auth($auth);
@@ -33,7 +33,7 @@ class Cache
         if (! (self::$_instance instanceof self)) {
             self::$_instance = new self($host, $port, $auth, $persistent);
         }
-        return self::$_instance;
+        return self::$_instance::$handler;
     }
 
     /**

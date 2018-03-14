@@ -19,10 +19,16 @@ class Websocket
      * server
      * 注册获取session_id , 服务器发起
      */
-    public function regist()
-    {
-        $platform_id = $user_id = $token = 0;
-        
+    public function regist($message)
+    {   
+        $mesarr =  explode('/',$message);
+        if (count($mesarr)<1) {
+           return false;
+        }
+        $platform_id = $mesarr[0];
+        $user_id=$mesarr[1];
+        $token=0;
+
         if (! $this->check()) {
             return json('Access deny!'); /* 禁止访问 */
         }
@@ -38,22 +44,21 @@ class Websocket
      * @param string $session_id            
      *
      */
-    public function login()
+    public function login($session_id=0,$fd)
     {
-        $session_id = 0;
-        
-        $fd = 0;
-        $session_id = 0;
+        // $session_id = 0;
+        // $fd = 0;
+        // $session_id = 0;
         $platFormUser = get_uid($session_id);
         if ($platFormUser) {
-            $platforms = Config::PLATFORM;
+            $platforms = Config::PLATFORMS;
             if (set_fid($session_id, $fd, $platforms[$platFormUser['platform_id']]['timeout'])) {
-                return 0;
+                return true;
             } else {
-                return 1;
+                return false;
             }
         } else {
-            return 'FAILED';
+            return false;
         }
     }
 
@@ -61,32 +66,51 @@ class Websocket
      * server
      * 发送push消息
      */
-    public function push()
+    public function push($data)
     {
         $platform_id = $user_id = $token = $message = 0;
-        
-        ;
+        $dataArr = [];
+        parse_str($data,$dataArr);
+        $fdstr = cache_get('f_'.$dataArr['session_id']);
+        if ($fdstr) {
+              $fdArr = explode('_',$fdstr);
+            $fd = $fdArr[1];
+            return $this->ws->push($fd,$dataArr['data']); 
+        }else{
+            return false;
+        }
+     
     }
 
     /**
      * browser
-     * 客户端发起关闭
+     * 客户端发起关闭   清除缓存信息
      */
-    public function close()
+    public function close($fd)
     {
-        ;
+       get_sid($fd);
     }
 
     /**
      * server
      * 服务器端断开
      */
-    public function out()
+    public function out($message)
     {
-        $platform_id = $user_id = $token = 0;
-        
-        // 断开 close
-        // 清除缓存
+        $mesarr =  explode('/',$message);
+        if (count($mesarr)<2) {
+           return false;  
+        }
+        $platform_id = $mesarr[0];
+        $user_id=$mesarr[1];
+
+        $session_id = cache_get('uid_'.$platform_id.'_'.$user_id);
+        if ($session_id) {
+           $fd = get_fid($session_id);
+            get_sid($fd);
+         return $fd;
+        }
+       return false;
     }
 
     /**
@@ -94,6 +118,6 @@ class Websocket
      */
     private function check($request = '')
     {
-        ;
+        return true;
     }
 }
