@@ -5,6 +5,10 @@ include_once 'helpers.php';
 include_once 'Cache.php';
 
 $webSocketServer = new swoole_websocket_server("0.0.0.0", Config::SOCKET_PORT);
+$webSocketServer->set([
+'ssl_cert_file'=>'',
+'ssl_key_file'=>''
+]);
 
 //监听websocket请求
 $webSocketServer->on('open', function ($webSocketServer, $request) {
