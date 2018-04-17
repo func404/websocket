@@ -4,7 +4,7 @@ include_once 'Websocket.php';
 include_once 'helpers.php';
 include_once 'Cache.php';
 
-$webSocketServer = new swoole_websocket_server("0.0.0.0", Config::SOCKET_PORT);
+$webSocketServer = new swoole_websocket_server("0.0.0.0", Config::SOCKET_PORT,SWOOLE_BASE,SWOOLE_SOCK_TCP | SWOOLE_SSL);
 $webSocketServer->set([
 'ssl_cert_file'=>'/etc/nginx/ssl/cert/214569169060146.pem',
 'ssl_key_file'=>'/etc/nginx/ssl/cert/214569169060146.key'
