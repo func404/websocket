@@ -15,9 +15,9 @@ final class Config
 
     const REDIS_HOST = '127.0.0.1';
 
-    const REDIS_PORT = '6379';
+    const REDIS_PORT = '6380';
 
-    const REDIS_AUTH = '';
+    const REDIS_AUTH = '!@#qweASD2018';
  // !@#qweASD2018
     const IP_ALLOWS = [
         '127.0.0.1'
