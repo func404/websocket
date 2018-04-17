@@ -17,8 +17,8 @@ final class Config
 
     const REDIS_PORT = '6379';
 
-    const REDIS_AUTH = '';//!@#qweASD2018
-
+    const REDIS_AUTH = '';
+ // !@#qweASD2018
     const IP_ALLOWS = [
         '127.0.0.1'
     ];
@@ -36,9 +36,9 @@ final class Config
             /*失效时间 默认为0 不失效*/
             'expire_at' => 0,
             /* 已注册的 session_id 数量*/
-            'current_clients'=>'',
+            'current_clients' => '',
             /*当前连接的客户端数量*/
-            'current_connections'=>25
+            'current_connections' => 25
         ]
     ];
 }
