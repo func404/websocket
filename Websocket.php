@@ -70,9 +70,9 @@ class Websocket
     {   
         $platform_id = $user_id = $token = $message = 0;
 
-        $session_id = getSidByUid($dataArr['platform_id'],$dataArr['user_id']);
         $dataArr = [];
         parse_str($data,$dataArr);
+        $session_id = getSidByUid($dataArr['platform_id'],$dataArr['user_id']);
         $fdstr = cache_get('f_'.$session_id);
         if ($fdstr) {
               $fdArr = explode('_',$fdstr);
