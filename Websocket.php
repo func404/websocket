@@ -67,11 +67,13 @@ class Websocket
      * 发送push消息
      */
     public function push($data)
-    {
+    {   
         $platform_id = $user_id = $token = $message = 0;
+
+        $session_id = getSidByUid($dataArr['platform_id'],$dataArr['user_id']);
         $dataArr = [];
         parse_str($data,$dataArr);
-        $fdstr = cache_get('f_'.$dataArr['session_id']);
+        $fdstr = cache_get('f_'.$session_id);
         if ($fdstr) {
               $fdArr = explode('_',$fdstr);
             $fd = $fdArr[1];

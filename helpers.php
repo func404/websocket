@@ -108,6 +108,13 @@ if (! function_exists('set_sid')) {
     }
 }
 
+if (! function_exists('getSidByUid')) {
+     function getSidByUid($user_id,$platform_id)
+    {
+       return cache_get('uid_' . $platform_id . '_' . $user_id);
+    }
+}
+
 if (! function_exists('get_sid')) {
 
     function get_sid($fd)
