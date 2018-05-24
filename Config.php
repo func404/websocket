@@ -3,9 +3,9 @@
 final class Config
 {
 
-    const SOCKET_PORT = 443;
+    const SOCKET_PORT = 37023;
 
-    const WORKER_NUM = 4;
+    const WORKER_NUM = 8;
 
     const DAEMONIZE = true;
 

@@ -77,7 +77,8 @@ class Websocket
         if ($fdstr) {
               $fdArr = explode('_',$fdstr);
             $fd = $fdArr[1];
-            return $this->ws->push($fd,$dataArr['data']); 
+            error_log("\nsession_id=>$session_id\n".json_encode($dataArr),3,'./test.txt');
+            return $this->ws->push($fd, $dataArr['data']); 
         }else{
             return false;
         }
