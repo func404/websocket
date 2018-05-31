@@ -52,7 +52,7 @@ class Websocket
         $platFormUser = get_uid($session_id);
         if ($platFormUser) {
             $platforms = Config::PLATFORMS;
-            if (set_fid($session_id, $fd, $platforms[$platFormUser['platform_id']]['timeout'])) {
+            if (set_fid($session_id, $fd, $platforms[1]['timeout'])) {
                 return true;
             } else {
                 return false;
