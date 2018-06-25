@@ -17,7 +17,7 @@ if (! function_exists('cache_set')) {
      * @param int|\Datetime $expire
      *            有效时长:以分钟为单位,或者有效期至： 默认为0 不过期 ;
      */
-    function cache_set($key, $value, $expire = 3600)
+    function cache_set($key, $value, $expire = 0)
     {
         $cache = Cache::getInstance(Config::REDIS_HOST, Config::REDIS_PORT, Config::REDIS_AUTH);
        error_log("\n".Config::REDIS_PORT."\n".$key."\n".$value."\n".gettype($cache)."\n",3,"/data/www/websocket/test.txt"); 
@@ -101,7 +101,7 @@ if (! function_exists('set_sid')) {
          if (cache_get($userId)) {
            cache_unset(cache_get($userId)); 
          }
-        if (cache_set($userId, $sessionId, $timeout) && cache_set($sessionId, $userId, $timeout)) {
+        if (cache_set($userId, $sessionId ) && cache_set($sessionId, $userId)) {
             return $sessionId;
         } else {
             return false;
