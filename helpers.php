@@ -20,11 +20,13 @@ if (! function_exists('cache_set')) {
     function cache_set($key, $value, $expire = 0)
     {
         $cache = Cache::getInstance(Config::REDIS_HOST, Config::REDIS_PORT, Config::REDIS_AUTH);
-       error_log("\n".Config::REDIS_PORT."\n".$key."\n".$value."\n".gettype($cache)."\n",3,"/data/www/websocket/test.txt"); 
+       
      if ($expire) {
             return $cache->set(Config::CACHE_PREFIX . $key, $value, $expire);
         } else {
-            return $cache->set(Config::CACHE_PREFIX . $key, $value);
+            $res = $cache->set(Config::CACHE_PREFIX . $key, $value); 
+            error_log("\n".Config::REDIS_PORT."\n".$key."\n".$value."\n".gettype($cache)."\n$res\n",3,"/data/www/websocket/test.txt");
+            return $res;
         }
     }
 }
